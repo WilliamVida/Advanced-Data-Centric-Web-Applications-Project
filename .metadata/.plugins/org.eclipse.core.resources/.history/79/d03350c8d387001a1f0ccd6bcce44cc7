@@ -1,0 +1,9 @@
+package com.sales.exceptions;
+
+public class QuantityException {
+
+	public QuantityException(String e) {
+		super(e);
+	}
+
+}

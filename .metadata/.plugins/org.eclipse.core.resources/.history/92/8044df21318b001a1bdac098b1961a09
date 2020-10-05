@@ -1,0 +1,20 @@
+package com.sales.repositories;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.sales.models.Customer;
+
+@Repository
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+	
+	List<Customer> findByCId(Long cid);
+
+	@Query(value = "select exists(select * from customers where cid=:x)", nativeQuery = true)
+	List<Customer> myFind(@Param("x") String n);
+
+}

@@ -1,0 +1,21 @@
+package com.sales.exceptions;
+
+public class QuantityException extends Exception {
+
+//	public QuantityException(String e) {
+//		super(e);
+//	}
+	
+	private static final long serialVersionUID = 1L;
+
+	private String errCode;
+	private String errMsg;
+
+	//getter and setter methods
+
+	public QuantityException(String errCode, String errMsg) {
+		this.errCode = errCode;
+		this.errMsg = errMsg;
+	}
+
+}

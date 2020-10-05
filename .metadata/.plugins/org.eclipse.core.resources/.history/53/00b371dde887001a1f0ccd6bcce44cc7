@@ -1,0 +1,32 @@
+package com.sales.controllers;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class TriggeringErrorsController {
+ 
+    @RequestMapping(value = '/throwCustomizedException1')
+    public ModelAndView throwCustomizedException1(
+        HttpServletRequest request,HttpServletResponse response)
+            throws CustomizedException1 {
+ 
+        throw new CustomizedException1(
+            'Houston, we have a problem!');
+    }
+ 
+    @RequestMapping(value = '/throwCustomizedException2')
+    public ModelAndView throwCustomizedException2(
+        HttpServletRequest request,HttpServletResponse response)
+            throws CustomizedException2 {
+ 
+        throw new CustomizedException2(
+            'Something happened on the way to heaven!');
+    }
+ 
+ 
+}

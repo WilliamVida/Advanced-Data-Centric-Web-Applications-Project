@@ -1,0 +1,10 @@
+package com.sales.exceptions;
+
+@SuppressWarnings("serial")
+public class CustomerDoesNotExist extends Exception {
+
+	public CustomerDoesNotExist(String e) {
+		super(e);
+	}
+
+}

@@ -1,0 +1,72 @@
+package com.sales.services;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sales.exceptions.CustomerDoesNotExistException;
+import com.sales.exceptions.OrderQuantityException;
+import com.sales.exceptions.ProductDoesNotExistException;
+import com.sales.models.Customer;
+import com.sales.models.Order;
+import com.sales.models.Product;
+import com.sales.repositories.CustomerRepository;
+import com.sales.repositories.OrderRepository;
+import com.sales.repositories.ProductRepository;
+
+@Service
+public class OrderService {
+
+	@Autowired
+	OrderRepository or;
+
+	@Autowired
+	CustomerRepository cr;
+
+	@Autowired
+	ProductRepository pr;
+	
+	@Autowired
+	CustomerService cs;
+
+	// date format
+	private String pattern = "yyyy-MM-dd";
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+	public ArrayList<Order> findAll() {
+		return (ArrayList<Order>) or.findAll();
+	}
+	
+//	@Query(value = "select exists(select * from customers where cid=" + 3 + ")", nativeQuery = true);
+//	Iterable<Customer> getCustomer();
+
+	public void save(Order o) throws OrderQuantityException, CustomerDoesNotExistException, ProductDoesNotExistException {
+		String date = simpleDateFormat.format(new Date());
+
+		Product p = new Product();
+		p = pr.findOne(o.getProd().getpId());
+				
+		Customer c=new Customer();
+//		c=cr.findOne(o.getCust().getcId());
+		c=cs.findCustomer(o.getCust().getcId());
+
+		if (o.getQty() > p.getQtyInStock()) {
+			throw new OrderQuantityException("Quantity too large: Product stock = " + p.getQtyInStock());
+		} else if (c==null) {
+			throw new CustomerDoesNotExistException("ERROR: Customer: " + o.getCust().getcId() + " and/or Product" + o.getProd().getpId() + " does not exist");
+		} else if (o.getProd().getpId() == null) {
+			throw new ProductDoesNotExistException("ERROR: Customer: " + o.getCust().getcId() + " and/or Product" + o.getProd().getpId() + " does not exist");
+		} else {
+			// minus the product in stock from the order quantity
+			p.setQtyInStock(p.getQtyInStock() - o.getQty());
+
+			o.setOrderDate(date);
+			or.save(o);
+		}
+
+	}
+
+}

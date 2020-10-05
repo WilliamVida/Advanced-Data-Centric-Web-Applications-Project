@@ -1,0 +1,98 @@
+package com.sales.controllers;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.sales.exceptions.QuantityException;
+import com.sales.models.Customer;
+import com.sales.models.Order;
+import com.sales.models.Product;
+import com.sales.services.CustomerService;
+import com.sales.services.OrderService;
+import com.sales.services.ProductService;
+
+@Controller
+@SessionAttributes("order")
+public class OrderController {
+
+	@Autowired
+	OrderService os;
+
+	@Autowired
+	CustomerService cs;
+
+	@Autowired
+	ProductService ps;
+
+	@RequestMapping(value = "/newOrder.html", method = RequestMethod.GET)
+	public String addOrderGET(Model model) {
+		Order o = new Order();
+		model.addAttribute("order", o);
+
+		ArrayList<Customer> customerNames = cs.findAll();
+		Map<Long, String> customerNamesList = new HashMap<Long, String>();
+		for (Customer c : customerNames) {
+			customerNamesList.put(c.getcId(), c.getcName());
+		}
+		model.addAttribute("customerNamesList", customerNamesList);
+
+		ArrayList<Product> products = ps.findAll();
+		Map<Long, String> productsDescList = new HashMap<Long, String>();
+		for (Product p : products) {
+			productsDescList.put(p.getpId(), p.getpDesc());
+		}
+		model.addAttribute("productsDescList", productsDescList);
+
+		return "newOrder";
+	}
+
+	@RequestMapping(value = "/newOrder.html", method = RequestMethod.POST)
+	public String addOrderPOST(Model model, @Valid @ModelAttribute("order") Order o, BindingResult result) throws QuantityException {
+		if (result.hasErrors()) {
+			ArrayList<Customer> customerNames = cs.findAll();
+			Map<Long, String> customerNamesList = new HashMap<Long, String>();
+			for (Customer c : customerNames) {
+				customerNamesList.put(c.getcId(), c.getcName());
+			}
+			model.addAttribute("customerNamesList", customerNamesList);
+
+			ArrayList<Product> products = ps.findAll();
+			Map<Long, String> productsDescList = new HashMap<Long, String>();
+			for (Product p : products) {
+				productsDescList.put(p.getpId(), p.getpDesc());
+			}
+			model.addAttribute("productsDescList", productsDescList);
+
+			return "newOrder";
+		}
+
+		try {
+			os.save(o);
+		} catch (QuantityException e) {
+			return "orderQuantityError";
+		}
+		os.save(o);
+		return "redirect:showOrders.html";
+	}
+
+	@RequestMapping(value = "/showOrders.html")
+	public String showProducts(Model model) {
+		ArrayList<Order> order = os.findAll();
+		model.addAttribute("order", order);
+
+		return "showOrders";
+	}
+
+}

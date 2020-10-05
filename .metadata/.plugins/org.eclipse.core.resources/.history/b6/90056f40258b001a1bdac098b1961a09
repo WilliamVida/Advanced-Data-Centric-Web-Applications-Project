@@ -1,0 +1,18 @@
+package com.sales.repositories;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.sales.models.Customer;
+
+@Repository
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+	
+
+	
+
+	@Query(value = "select exists(select * from customers where cid=" + 3 + ")", nativeQuery = true);
+	Iterable<Customer> getCustomer();
+}

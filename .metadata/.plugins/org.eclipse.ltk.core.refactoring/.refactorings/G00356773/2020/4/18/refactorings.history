@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.sales.exceptions.CustomerDoesNotExist&apos; to &apos;CustomerDoesNotExistException&apos;&#x0D;&#x0A;- Original project: &apos;G00356773&apos;&#x0D;&#x0A;- Original element: &apos;com.sales.exceptions.CustomerDoesNotExist&apos;&#x0D;&#x0A;- Renamed element: &apos;com.sales.exceptions.CustomerDoesNotExistException&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;CustomerDoesNotExist&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/main\/java&lt;com.sales.exceptions{CustomerDoesNotExist.java[CustomerDoesNotExist" matchStrategy="1" name="CustomerDoesNotExistException" qualified="false" references="true" similarDeclarations="false" stamp="1588107588890" textual="false" version="1.0"/>
+</session>

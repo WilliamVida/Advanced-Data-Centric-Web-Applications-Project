@@ -1,0 +1,22 @@
+package com.sales.repositories;
+
+import java.util.ArrayList;
+
+import org.jboss.logging.Param;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.sales.models.Customer;
+
+@Repository
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+
+	@Query(value = "SELECT * FROM person " +
+			  "WHERE name = :name " +
+			  "AND age < :age",
+	   		  nativeQuery = true)
+	ArrayList<Person> nameAndAge(@Param("name") String name,
+					@Param("age") int age);
+
+}
